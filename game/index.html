@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cosmo Catch</title>
+  <style>
+    html,body{height:100%;margin:0;background:#081029;color:#e6eef8;font-family:Inter,system-ui,Arial}
+    #gameWrap{display:flex;align-items:center;justify-content:center;height:100%;}
+    canvas{background:linear-gradient(#021029,#081233);border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    .ui{position:fixed;left:16px;top:16px;font-size:16px;color:#cfe3ff}
+    .btn{position:fixed;right:16px;top:16px;padding:8px 12px;border-radius:8px;background:#0b1224;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+  </style>
+</head>
+<body>
+<div id="gameWrap">
+  <canvas id="c" width="720" height="480"></canvas>
+</div>
+<div class="ui" id="score">Score: 0</div>
+<button class="btn" id="restart">Restart</button>
+
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let score = 0;
+  let running = true;
+
+  // Player
+  const player = {x: W/2, y: H-50, r: 18, vx:0, speed:4};
+
+  // Stars (targets) and asteroids (hazards)
+  let stars = [];
+  let asteroids = [];
+  const rand = (a,b)=> Math.random()*(b-a)+a;
+
+  function spawnStar(){
+    stars.push({x:rand(20,W-20), y:-10, r:10, vy:rand(1,2.2)});
+  }
+  function spawnAsteroid(){
+    asteroids.push({x:rand(20,W-20), y:-10, r:14, vy:rand(1.2,3.2)});
+  }
+
+  // controls
+  const keys = {};
+  window.addEventListener('keydown', e=> keys[e.key]=true);
+  window.addEventListener('keyup', e=> keys[e.key]=false);
+
+  function update(){
+    if(!running) return;
+    // player movement
+    if(keys['ArrowLeft']||keys['a']) player.x -= player.speed;
+    if(keys['ArrowRight']||keys['d']) player.x += player.speed;
+    if(player.x < player.r) player.x = player.r;
+    if(player.x > W - player.r) player.x = W - player.r;
+
+    // spawn logic
+    if(Math.random() < 0.02) spawnStar();
+    if(Math.random() < 0.012) spawnAsteroid();
+
+    // update stars
+    for(let i=stars.length-1;i>=0;i--){
+      const s = stars[i];
+      s.y += s.vy;
+      if(s.y - s.r > H) stars.splice(i,1);
+      // collision
+      if(dist(s.x,s.y,player.x,player.y) < s.r + player.r){
+        stars.splice(i,1);
+        score += 10;
+        document.getElementById('score').textContent = 'Score: '+score;
+      }
+    }
+    // update asteroids
+    for(let i=asteroids.length-1;i>=0;i--){
+      const a = asteroids[i];
+      a.y += a.vy;
+      if(a.y - a.r > H) asteroids.splice(i,1);
+      if(dist(a.x,a.y,player.x,player.y) < a.r + player.r){
+        // hit
+        running = false;
+      }
+    }
+  }
+
+  function dist(x1,y1,x2,y2){ return Math.hypot(x2-x1, y2-y1); }
+
+  function draw(){
+    // background
+    ctx.clearRect(0,0,W,H);
+    // stars (background)
+    for(let i=0;i<60;i++){
+      ctx.fillStyle = 'rgba(255,255,255,0.02)';
+      ctx.fillRect((i*37)%W, (i*73)%H, 2,2);
+    }
+    // draw player
+    ctx.beginPath();
+    ctx.fillStyle = '#7c3aed';
+    ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+    ctx.fill();
+    // draw stars
+    for(const s of stars){
+      ctx.beginPath();
+      ctx.fillStyle = '#ffd966';
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    // draw asteroids
+    for(const a of asteroids){
+      ctx.beginPath();
+      ctx.fillStyle = '#9aa4c4';
+      ctx.arc(a.x, a.y, a.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // game over overlay
+    if(!running){
+      ctx.fillStyle = 'rgba(2,6,23,0.7)';
+      ctx.fillRect(0,0,W,H);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 32px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over', W/2, H/2 - 10);
+      ctx.font = '16px Arial';
+      ctx.fillText('Score: ' + score, W/2, H/2 + 22);
+    }
+  }
+
+  function loop(){
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.getElementById('restart').addEventListener('click', ()=>{
+    score = 0; stars=[]; asteroids=[]; running = true;
+    document.getElementById('score').textContent = 'Score: 0';
+  });
+
+  // mobile touch: move player to touch x
+  canvas.addEventListener('touchmove', (e)=>{
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    player.x = (touch.clientX - rect.left);
+  });
+
+})();
+</script>
+</body>
+</html>

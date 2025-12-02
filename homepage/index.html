@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Arcadia — Gaming Portal</title>
+  <style>
+    :root{--bg:#0b1020;--card:#0f1724;--accent:#7c3aed;--muted:#9aa4c4;color-scheme:dark}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#071026 0%, #071833 100%);color:#e6eef8}
+    header{padding:28px 24px;display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{font-size:20px;margin:0}
+    nav a{color:inherit;text-decoration:none;margin-left:14px;opacity:.85}
+    main{max-width:1000px;margin:36px auto;padding:20px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    .hero{padding:28px;border-radius:12px}
+    .play-btn{display:inline-block;padding:10px 16px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#06b6d4);color:#081029;font-weight:600;text-decoration:none}
+    ul{padding-left:18px;margin:8px 0;color:var(--muted)}
+    footer{max-width:1000px;margin:20px auto 60px;padding:12px;color:var(--muted);text-align:center}
+    .game-thumb{width:100%;height:180px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.1));display:flex;align-items:center;justify-content:center;font-weight:700}
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <h1>Arcadia — Gaming Portal</h1>
+      <div style="font-size:13px;color:var(--muted)">A small portal to host and play cloud-deployed games</div>
+    </div>
+  </div>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#games">Games</a>
+    <a href="#repo">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <div class="grid">
+    <section class="card hero">
+      <h2>Play "Cosmo Catch" — Simple Canvas Game</h2>
+      <p style="color:var(--muted)">Click <strong>Play Game</strong> to open the game hosted via GitHub Pages (or another cloud host). The portal links to the cloud-hosted build as required.</p>
+      <p><a class="play-btn" id="playLink" href="./game/index.html" target="_blank">Play Game (guest)</a></p>
+
+      <h3 id="about">About this portal</h3>
+      <ul>
+        <li>Static site designed to be deployed on GitHub Pages (or Netlify / Vercel).</li>
+        <li>Includes a small HTML5 Canvas game located in <code>/game</code>.</li>
+        <li>Repository templates and README included to create and share the GitHub repository.</li>
+      </ul>
+
+      <h3 id="repo">Repository & deployment</h3>
+      <p style="color:var(--muted)">Follow the README in the package for exact commands to create your GitHub repository, push the code, enable Pages, and add collaborators.</p>
+    </section>
+
+    <aside class="card">
+      <h4>Game Preview</h4>
+      <div class="game-thumb">Cosmo Catch — collect stars, avoid asteroids</div>
+
+      <h4 style="margin-top:16px">Quick Links</h4>
+      <p style="margin:6px 0"><a href="./game/index.html" target="_blank">Open Game (guest)</a></p>
+      <p style="margin:6px 0"><a href="https://github.com/" target="_blank">GitHub</a></p>
+      <p style="margin:6px 0;color:var(--muted)">After you deploy to GitHub Pages, replace the play link above with your published URL (e.g., <code>https://username.github.io/repo-name/</code>).</p>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  Prepared for submission — includes code + deployment instructions. Good luck!
+</footer>
+
+</body>
+</html>
